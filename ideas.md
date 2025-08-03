@@ -1,0 +1,1 @@
+- An mapping that maps cub to cubUri
