@@ -2,17 +2,16 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title Zoo
- * @author Chukwubuike Victory Chime GH/Twitter: @yeahChibyke
- * @notice Animals are represented in the Zoo as on-chain NFTs. They get upgraded to the Jungle contract
- *
- * ░▒▓████████▓▒░░▒▓██████▓▒░ ░▒▓██████▓▒░
- *        ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
- *      ░▒▓██▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
- *    ░▒▓██▓▒░  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
- *  ░▒▓██▓▒░    ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
- * ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
- * ░▒▓████████▓▒░░▒▓██████▓▒░ ░▒▓██████▓▒░
+ * ▒███████▒ ▒█████   ▒█████      █    ██  ██▓███    ▄████  ██▀███   ▄▄▄      ▓█████▄ ▓█████ ▄▄▄       ▄▄▄▄    ██▓    ▓█████
+ * ▒ ▒ ▒ ▄▀░▒██▒  ██▒▒██▒  ██▒    ██  ▓██▒▓██░  ██▒ ██▒ ▀█▒▓██ ▒ ██▒▒████▄    ▒██▀ ██▌▓█   ▀▒████▄    ▓█████▄ ▓██▒    ▓█   ▀ 
+ * ░ ▒ ▄▀▒░ ▒██░  ██▒▒██░  ██▒   ▓██  ▒██░▓██░ ██▓▒▒██░▄▄▄░▓██ ░▄█ ▒▒██  ▀█▄  ░██   █▌▒███  ▒██  ▀█▄  ▒██▒ ▄██▒██░    ▒███   
+ *   ▄▀▒   ░▒██   ██░▒██   ██░   ▓▓█  ░██░▒██▄█▓▒ ▒░▓█  ██▓▒██▀▀█▄  ░██▄▄▄▄██ ░▓█▄   ▌▒▓█  ▄░██▄▄▄▄██ ▒██░█▀  ▒██░    ▒▓█  ▄ 
+ * ▒███████▒░ ████▓▒░░ ████▓▒░   ▒▒█████▓ ▒██▒ ░  ░░▒▓███▀▒░██▓ ▒██▒ ▓█   ▓██▒░▒████▓ ░▒████▒▓█   ▓██▒░▓█  ▀█▓░██████▒░▒████▒
+ * ░▒▒ ▓░▒░▒░ ▒░▒░▒░ ░ ▒░▒░▒░    ░▒▓▒ ▒ ▒ ▒▓▒░ ░  ░ ░▒   ▒ ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░ ▒▒▓  ▒ ░░ ▒░ ░▒▒   ▓▒█░░▒▓███▀▒░ ▒░▓  ░░░ ▒░ ░
+ * ░░▒ ▒ ░ ▒  ░ ▒ ▒░   ░ ▒ ▒░    ░░▒░ ░ ░ ░▒ ░       ░   ░   ░▒ ░ ▒░  ▒   ▒▒ ░ ░ ▒  ▒  ░ ░  ░ ▒   ▒▒ ░▒░▒   ░ ░ ░ ▒  ░ ░ ░  ░
+ * ░ ░ ░ ░ ░░ ░ ░ ▒  ░ ░ ░ ▒      ░░░ ░ ░ ░░       ░ ░   ░   ░░   ░   ░   ▒    ░ ░  ░    ░    ░   ▒    ░    ░   ░ ░      ░   
+ *   ░ ░        ░ ░      ░ ░        ░                    ░    ░           ░  ░   ░       ░  ░     ░  ░ ░          ░  ░   ░  ░
+ * ░                                                                           ░                            ░
  */
 
 // ------------------------------------------------------------------
@@ -24,8 +23,10 @@ import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC72
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
-// import {Base64NFTUpgradeable} from "@openzeppelin/contracts-upgradeable/mocks/docs/utilities/Base64NFTUpgradeable.sol";
 
+// ------------------------------------------------------------------
+//                             CONTRACT
+// ------------------------------------------------------------------
 contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgradeable {
     // ------------------------------------------------------------------
     //                              ERRORS
@@ -34,16 +35,27 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     error Zoo__CubsNotComplete();
     error Zoo__UnAuthorized();
     error Zoo__NotACub();
+    error Zoo__NotHealthyEnough();
+    error Zoo__JungleNotSet();
 
     // ------------------------------------------------------------------
     //                             STORAGE
     // ------------------------------------------------------------------
-    string[] private s_cubsUri;
-    mapping(string cub => string cubUri) cubToUri;
-    address zooKeeper;
-    uint8 private s_hp;
-    mapping(string cub => uint8 feedingCount) private s_feedingCount;
-    mapping(string cub => string health) private s_healthBar;
+    string[] private s_cubTypes;
+    mapping(string => string) private cubToUri;
+    mapping(string => uint8) private s_feedingCount;
+    mapping(string => string) private s_healthStatus;
+    mapping(string => uint8) private s_healthPoints;
+
+    address private zooKeeper;
+    address private jungleContract;
+    uint256 private nextTokenId;
+
+    // ------------------------------------------------------------------
+    //                             EVENTS
+    // ------------------------------------------------------------------
+    event CubFed(string indexed cub, uint8 feedingCount, uint8 healthPoints, string healthStatus);
+    event CubUpgraded(string indexed cub, uint256 tokenId, address jungleContract);
 
     // ------------------------------------------------------------------
     //                             MODIFIER
@@ -55,18 +67,38 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
         _;
     }
 
+    modifier onlyJungle() {
+        if (msg.sender != jungleContract) {
+            revert Zoo__UnAuthorized();
+        }
+        _;
+    }
+
+    modifier validCub(string memory _cub) {
+        if (bytes(cubToUri[_cub]).length == 0) {
+            revert Zoo__NotACub();
+        }
+        _;
+    }
+
     // ------------------------------------------------------------------
     //                           INITIALIZER
     // ------------------------------------------------------------------
-    function initialize(address _keeper, string[] memory cubsUri) public initializer {
+    function initialize(address _keeper, string[] memory cubTypes, string[] memory cubsUri) public initializer {
         if (_keeper == address(0)) {
             revert ZOO__ZeroAddress();
         }
-        if (cubsUri.length <= 0) {
+        if (cubsUri.length == 0 || cubTypes.length != cubsUri.length) {
             revert Zoo__CubsNotComplete();
         }
+
         zooKeeper = _keeper;
-        s_cubsUri = cubsUri;
+        s_cubTypes = cubTypes;
+
+        // Initialize cubToUri mapping
+        for (uint256 i = 0; i < cubTypes.length; i++) {
+            cubToUri[cubTypes[i]] = cubsUri[i];
+        }
 
         __ERC721_init("Zoo", "ZZOO");
         __Ownable_init(msg.sender);
@@ -76,14 +108,46 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     // ------------------------------------------------------------------
     //                        EXTERNAL FUNCTIONS
     // ------------------------------------------------------------------
-    function feedCubs(string memory _cub) external onlyKeeper {
-        // check that cub exists
+    function feedCub(string memory _cub) external onlyKeeper validCub(_cub) {
         s_feedingCount[_cub] += 1;
+        uint8 healthPoints = s_feedingCount[_cub] * 10;
+        s_healthPoints[_cub] = healthPoints;
+
+        // Update health status
+        if (healthPoints <= 30) {
+            s_healthStatus[_cub] = "malnourished";
+        } else if (healthPoints <= 60) {
+            s_healthStatus[_cub] = "healthy";
+        } else {
+            s_healthStatus[_cub] = "vibrant";
+        }
+
+        emit CubFed(_cub, s_feedingCount[_cub], healthPoints, s_healthStatus[_cub]);
     }
 
-    // ------------------------------------------------------------------
-    //                             PUBLIC FUNCTIONS
-    // ------------------------------------------------------------------
+    function upgradeToJungle(string memory _cub) external onlyOwner validCub(_cub) {
+        if (jungleContract == address(0)) {
+            revert Zoo__JungleNotSet();
+        }
+
+        // Check health status
+        if (s_healthPoints[_cub] < 40) {
+            revert Zoo__NotHealthyEnough();
+        }
+
+        // Mint NFT
+        uint256 tokenId = nextTokenId++;
+        _safeMint(jungleContract, tokenId);
+
+        emit CubUpgraded(_cub, tokenId, jungleContract);
+    }
+
+    function setJungleContract(address _jungle) external onlyOwner {
+        if (_jungle == address(0)) {
+            revert ZOO__ZeroAddress();
+        }
+        jungleContract = _jungle;
+    }
 
     // ------------------------------------------------------------------
     //                             INTERNAL FUNCTIONS
@@ -93,10 +157,10 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     }
 
     function _helperURI(string memory _cub) internal view returns (string memory) {
-        // require _cub is a valid cub
         string memory imageURI = cubToUri[_cub];
         uint8 feedingCount = s_feedingCount[_cub];
-        string memory health = s_healthBar[_cub];
+        string memory healthStatus = s_healthStatus[_cub];
+        uint8 healthPoints = s_healthPoints[_cub];
 
         return string(
             abi.encodePacked(
@@ -110,8 +174,11 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
                         '{"trait_type": "feeding_count", "value": ',
                         Strings.toString(feedingCount),
                         "},",
-                        '{"trait_type": "health", "value": "',
-                        health,
+                        '{"trait_type": "health_points", "value": ',
+                        Strings.toString(healthPoints),
+                        "},",
+                        '{"trait_type": "health_status", "value": "',
+                        healthStatus,
                         '"}',
                         '], "image":"',
                         imageURI,
@@ -125,12 +192,25 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     // ------------------------------------------------------------------
     //                         GETTER FUNCTIONS
     // ------------------------------------------------------------------
-    function getNumberCubs() external view returns (uint256) {
-        return s_cubsUri.length;
+    function getCubURI(string memory _cub) external view validCub(_cub) returns (string memory) {
+        return _helperURI(_cub);
     }
 
-    function getCubURI(string memory _cub) external view returns (string memory) {
-        return _helperURI(_cub);
+    function getCubHealth(string memory _cub)
+        external
+        view
+        validCub(_cub)
+        returns (uint8 healthPoints, string memory healthStatus)
+    {
+        return (s_healthPoints[_cub], s_healthStatus[_cub]);
+    }
+
+    function getFeedingCount(string memory _cub) external view validCub(_cub) returns (uint8) {
+        return s_feedingCount[_cub];
+    }
+
+    function getJungleContract() external view returns (address) {
+        return jungleContract;
     }
 
     // ------------------------------------------------------------------
