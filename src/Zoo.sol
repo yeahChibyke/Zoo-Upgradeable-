@@ -125,6 +125,7 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
         emit CubFed(_cub, s_feedingCount[_cub], healthPoints, s_healthStatus[_cub]);
     }
 
+    // @notice -- disregard logic in this function
     function upgradeToJungle(string memory _cub) external onlyOwner validCub(_cub) {
         if (jungleContract == address(0)) {
             revert Zoo__JungleNotSet();
