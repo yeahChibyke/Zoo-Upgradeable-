@@ -50,12 +50,13 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     address private zooKeeper;
     address private jungleContract;
     uint256 private nextTokenId;
+    bool upgraded;
 
     // ------------------------------------------------------------------
     //                             EVENTS
     // ------------------------------------------------------------------
     event CubFed(string indexed cub, uint8 feedingCount, uint8 healthPoints, string healthStatus);
-    event CubUpgraded(string indexed cub, uint256 tokenId, address jungleContract);
+    event CubsUpgraded(uint256 indexed numberOfUpgradedCubs, bool indexed upgradeStatus, address jungleContract);
 
     // ------------------------------------------------------------------
     //                             MODIFIER
@@ -126,21 +127,29 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     }
 
     // @notice -- disregard logic in this function
-    function upgradeToJungle(string memory _cub) external onlyOwner validCub(_cub) {
+    function upgradeToJungle() external onlyOwner {
         if (jungleContract == address(0)) {
             revert Zoo__JungleNotSet();
         }
 
-        // Check health status
-        if (s_healthPoints[_cub] < 40) {
-            revert Zoo__NotHealthyEnough();
+        uint256 counter;
+        uint256 len = s_cubTypes.length;
+
+        for (uint256 c = 0; c < len; c++) {
+            string memory cubType = s_cubTypes[c];
+
+            // skip malnourished cubs
+            if (keccak256(bytes(s_healthStatus[cubType])) == keccak256(bytes("malnourished"))) {
+                continue;
+            }
+            // further logic for getting the cubs that were upgraded
+
+            counter++;
         }
 
-        // Mint NFT
-        uint256 tokenId = nextTokenId++;
-        _safeMint(jungleContract, tokenId);
+        upgraded = true;
 
-        emit CubUpgraded(_cub, tokenId, jungleContract);
+        emit CubsUpgraded(counter, upgraded, jungleContract);
     }
 
     function setJungleContract(address _jungle) external onlyOwner {
