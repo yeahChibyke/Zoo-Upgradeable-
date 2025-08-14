@@ -2,6 +2,10 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+
+ffi = true
+
+
 remappings = [
     "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
     "@openzeppelin/contracts/=lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/",
@@ -11,4 +15,7 @@ remappings = [
     "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
     "openzeppelin-contracts/=lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/",
 ]
+
+
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
