@@ -5,6 +5,11 @@ libs = ["lib"]
 
 ffi = true
 
+fs_permissions = [
+    { access = "read", path = "./img" },
+    { access = "read", path = "./broadcast" },
+    { access = "read-write", path = "./" },
+]
 
 remappings = [
     "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
@@ -15,7 +20,6 @@ remappings = [
     "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
     "openzeppelin-contracts/=lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/",
 ]
-
 
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
