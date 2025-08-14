@@ -83,6 +83,13 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     }
 
     // ------------------------------------------------------------------
+    //           @CUSTOM:OZ-UPGRADES-UNSAFE-ALLOW CONSTRUCTOR
+    // ------------------------------------------------------------------
+    constructor() {
+        _disableInitializers();
+    }
+
+    // ------------------------------------------------------------------
     //                           INITIALIZER
     // ------------------------------------------------------------------
     function initialize(address _keeper, string[] memory cubTypes, string[] memory cubsUri) public initializer {
@@ -146,6 +153,8 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
 
             counter++;
         }
+
+        _authorizeUpgrade(jungleContract);
 
         upgraded = true;
 
