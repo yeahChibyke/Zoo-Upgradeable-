@@ -18,12 +18,12 @@ contract DeployZoo is Script {
     string snakeSVG = vm.readFile("./img/snake.svg");
     string wolfSVG = vm.readFile("./img/wolf.svg");
 
-    string bearURI = svgToImageURI(bearSVG);
-    string elephantURI = svgToImageURI(elephantSVG);
-    string leopardURI = svgToImageURI(leopardSVG);
-    string monkeyURI = svgToImageURI(monkeySVG);
-    string snakeURI = svgToImageURI(snakeSVG);
-    string wolfURI = svgToImageURI(wolfSVG);
+    string public bearURI = svgToImageURI(bearSVG);
+    string public elephantURI = svgToImageURI(elephantSVG);
+    string public leopardURI = svgToImageURI(leopardSVG);
+    string public monkeyURI = svgToImageURI(monkeySVG);
+    string public snakeURI = svgToImageURI(snakeSVG);
+    string public wolfURI = svgToImageURI(wolfSVG);
 
     string public bearCub = "bearCub";
     string public elephantCub = "elephantCub";

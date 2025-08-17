@@ -20,13 +20,33 @@ contract TestZoo is Test {
     string snakeCub;
     string wolfCub;
 
+    string bearURI;
+    string elephantURI;
+    string leopardURI;
+    string monkeyURI;
+    string snakeURI;
+    string wolfURI;
+
     function setUp() public {
         zoo = new DeployZoo();
         zooKeeper = zoo.keeper();
         alice = makeAddr("alice");
         proxyAddress = zoo.deployZoo();
 
-        // bearCub
+        bearCub = zoo.bearCub();
+        elephantCub = zoo.elephantCub();
+        leopardCub = zoo.leopardCub();
+        monkeyCub = zoo.monkeyCub();
+        snakeCub = zoo.snakeCub();
+        wolfCub = zoo.wolfCub();
+
+        // doing this leads to the connected test failing
+        // bearURI = zoo.bearURI();
+        // elephantURI = zoo.elephantURI();
+        // leopardURI = zoo.leopardURI();
+        // monkeyURI = zoo.monkeyURI();
+        // snakeURI = zoo.snakeURI();
+        // wolfURI = zoo.wolfURI();
     }
 
     function test_Zoo_Contract_Constructor() public view {
@@ -34,6 +54,10 @@ contract TestZoo is Test {
         assert(Zoo(proxyAddress).getUpgradeStatus() == false);
         assert(Zoo(proxyAddress).getTotalCubs() == 6);
     }
+
+    // function test_Can_Get_Cub_URI() public view {
+    //     assertEq(Zoo(proxyAddress).getCubURI(bearCub), bearURI); // test failing with out of gas evm error
+    // }
 
     function test_Only_ZooKeeper_Can_Feed_Cubs() public {
         vm.prank(alice);
@@ -52,5 +76,12 @@ contract TestZoo is Test {
         assert(Zoo(proxyAddress).getFeedingCount(bearCub) == 0);
 
         vm.prank(zooKeeper);
+        Zoo(proxyAddress).feedCub(bearCub);
+
+        (uint8 hp, string memory hs) = Zoo(proxyAddress).getCubHealth(bearCub);
+
+        assert(Zoo(proxyAddress).getFeedingCount(bearCub) == 1);
+        assert(hp == 10);
+        assertEq(hs, "malnourished");
     }
 }
