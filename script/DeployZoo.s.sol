@@ -9,7 +9,7 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 contract DeployZoo is Script {
     Zoo public zooImplementation;
     ERC1967Proxy public proxy;
-    address keeper = makeAddr("keeper");
+    address public keeper = makeAddr("zoo keeper");
 
     string bearSVG = vm.readFile("./img/bear.svg");
     string elephantSVG = vm.readFile("./img/elephant.svg");
@@ -25,12 +25,12 @@ contract DeployZoo is Script {
     string snakeURI = svgToImageURI(snakeSVG);
     string wolfURI = svgToImageURI(wolfSVG);
 
-    string bearCub = "bearCub";
-    string elephantCub = "elephantCub";
-    string leopardCub = "leopardCub";
-    string monkeyCub = "monkeyCub";
-    string snakeCub = "snakeCub";
-    string wolfCub = "wolfCub";
+    string public bearCub = "bearCub";
+    string public elephantCub = "elephantCub";
+    string public leopardCub = "leopardCub";
+    string public monkeyCub = "monkeyCub";
+    string public snakeCub = "snakeCub";
+    string public wolfCub = "wolfCub";
 
     function run() external returns (address proxyAddress) {
         proxyAddress = deployZoo();

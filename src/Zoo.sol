@@ -211,6 +211,11 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
     // ------------------------------------------------------------------
     //                         GETTER FUNCTIONS
     // ------------------------------------------------------------------
+
+    function getZooKeeper() external view returns (address) {
+        return zooKeeper;
+    }
+
     function getCubURI(string memory _cub) external view validCub(_cub) returns (string memory) {
         return _helperURI(_cub);
     }
@@ -230,6 +235,14 @@ contract Zoo is Initializable, UUPSUpgradeable, ERC721Upgradeable, OwnableUpgrad
 
     function getJungleContract() external view returns (address) {
         return jungleContract;
+    }
+
+    function getUpgradeStatus() external view returns (bool) {
+        return upgraded;
+    }
+
+    function getTotalCubs() external view returns (uint256) {
+        return s_cubTypes.length;
     }
 
     // ------------------------------------------------------------------
